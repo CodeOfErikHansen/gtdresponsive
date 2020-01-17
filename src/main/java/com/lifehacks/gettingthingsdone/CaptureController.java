@@ -10,10 +10,6 @@ public class CaptureController {
     @Autowired
     StuffRepository stuffRepo;
 
-    @GetMapping("/")
-    public String home(){
-        return "Hi there. Please Work";
-    }
 
     @GetMapping("/inbox")
     public Iterable<Stuff> getInbox() {

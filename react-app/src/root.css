@@ -1,0 +1,32 @@
+#inbox {
+    height: 90%;
+    font-size: 4vh;
+    text-align: center;
+    display: grid;
+    vertical-align: bottom;
+    grid-template-rows:80% 20%;
+}
+
+#stuff-entry {
+    font-size: 4vh;
+    border: 3px solid black;
+}
+
+#stuff-list {
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column-reverse;
+
+
+}
+#stuff-list div{
+border-bottom: 1px gray solid;
+
+}
+
+#app-title {
+    height: 10%;
+    font-size: 5vh;
+    text-align: center;
+    margin-bottom: 0;
+}
