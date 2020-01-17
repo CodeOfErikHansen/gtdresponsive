@@ -62,7 +62,7 @@ class Inbox extends React.Component {
                 <div id="stuff-list">{stuffList}</div>
             <form onSubmit={this.handleSubmit}>
                 <label>
-                    <input autoFocus id="stuff-entry" type="text" value={this.state.note} onChange={this.handleChange} />
+                    <input autoFocus id="stuff-entry" type="text" placeholder="What's on your mind?" value={this.state.note} onChange={this.handleChange} />
                 </label>
                 <input hidden type="submit" value="submit"/>
             </form>
