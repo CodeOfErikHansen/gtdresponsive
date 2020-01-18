@@ -5,6 +5,18 @@
     display: grid;
     vertical-align: bottom;
     grid-template-rows:80% 20%;
+    background:lightyellow;
+}
+#organizer {
+    height: 90%;
+    background-color: lightblue;
+}
+#organizer > div{
+    font-size: 4vh;
+    text-align: center;
+    display: grid;
+    grid-template-columns: auto 8% 8% 8% 8% 8%;
+
 }
 
 #stuff-entry {
@@ -16,8 +28,6 @@
     overflow-y: scroll;
     display: flex;
     flex-direction: column-reverse;
-
-
 }
 #stuff-list div{
 border-bottom: 1px gray solid;
@@ -36,4 +46,12 @@ nav {
     grid-template-columns: auto auto;
     font-size: 3vh;
     text-align:center;
+    border:1px solid black;
+}
+
+#nav-inbox {
+    background:lightyellow;
+}
+#nav-org {
+    background:lightblue;
 }

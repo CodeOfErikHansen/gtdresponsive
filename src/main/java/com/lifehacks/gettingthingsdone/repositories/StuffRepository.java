@@ -1,5 +1,6 @@
-package com.lifehacks.gettingthingsdone;
+package com.lifehacks.gettingthingsdone.repositories;
 
+import com.lifehacks.gettingthingsdone.models.Stuff;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

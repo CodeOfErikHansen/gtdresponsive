@@ -1,5 +1,7 @@
 package com.lifehacks.gettingthingsdone;
 
+import com.lifehacks.gettingthingsdone.models.Stuff;
+import com.lifehacks.gettingthingsdone.repositories.StuffRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

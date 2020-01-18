@@ -1,0 +1,41 @@
+The inbox just stores text line items.
+Then I need to organize them.
+The organizer page needs to load the inbox contents.
+I need to be able to send items to different areas
+No Action
+1. trash
+2. someday list
+3. records
+Action Needed
+1.2 minute complete
+2. Project
+3. Next Action
+
+UX Flow
+Stuff renders on the screen as a list
+Each stuff has buttons next to it for how it is processed.
+    -trash can
+    -someday list
+    -records
+    -done
+    -todo<assigns to project with a non-project for one offs
+Clicking on any of the buttons will open up its own flow.
+
+trashing it will hide it in database and remove it from front end.
+option to revert if a mistake was made but no confirmation
+
+Someday List will follow the project format but not tie it into the normal next action workflow
+
+Records will allow bundling of records
+
+2 minute complete is a no confirmation checkbox. Actions I have completed is a list I totally want to be able to look at
+
+todo changes it to assigning the item as a project/to a project. Replace buttons in that row with the interface for this
+I should consider that the note I made is not garuanteed to be the name I would want to give the project/action
+I want the workflow on the backend to be that a Stuff is either completed, rejected or transformed into a record, project, or next action
+I need status codes for this because I can either process a stuff, delete a stuff, or complete a stuff
+Action items can completed or deleted
+Projects can be completed, deleted, or shelved
+Records have no status but can be deleted.
+
+A useful thing I need to capture is the contexts when something is useful. That is a next action level item

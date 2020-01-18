@@ -56,7 +56,7 @@ class Inbox extends React.Component {
 
 
     render() {
-        const stuffList = this.state.stuffList.map((note) => <div key={note.id}>{note.note}</div>)
+        const stuffList = this.state.stuffList.map((note) => <div key={note.inboxId}>{note.note}</div>)
         return (
             <div id="inbox">
                 <div id="stuff-list">{stuffList}</div>
