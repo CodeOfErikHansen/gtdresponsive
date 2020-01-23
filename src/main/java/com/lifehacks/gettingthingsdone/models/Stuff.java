@@ -14,5 +14,7 @@ public class Stuff {
     @Column
     private String note;
 
-    //todo: bring in status object so that it can be used to filter across sections. What is best annotation and do I need a repo
+    @ManyToOne
+    @JoinColumn(name="status_id", nullable = false)
+    private Status status;
 }

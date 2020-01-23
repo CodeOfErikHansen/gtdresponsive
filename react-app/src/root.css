@@ -43,7 +43,7 @@ border-bottom: 1px gray solid;
 
 nav {
     display:grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: auto auto 5% 5%;
     font-size: 3vh;
     text-align:center;
     border:1px solid black;
@@ -54,4 +54,14 @@ nav {
 }
 #nav-org {
     background:lightblue;
+}
+
+.button {
+    border: solid black 1px;
+}
+#two-minute {
+    background:lightgreen;
+}
+#discard {
+    background:lightcoral;
 }

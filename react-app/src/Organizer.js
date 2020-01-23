@@ -6,7 +6,7 @@ class Organizer extends React.Component{
         this.state = {
             stuffList: [],
         };
-
+        this.handleOrganizerClick = this.handleOrganizerClick.bind(this);
     }
 
     async componentDidMount() {
@@ -21,9 +21,28 @@ class Organizer extends React.Component{
             this.setState({stuffList: data});
         })
     }
-    //todo The line item should be a component that I repeat each time for the list
+    handleOrganizerClick(e){
+            fetch('http://localhost:8080/'+e.target.innerText+'/'+e.target.value, {
+                method: 'POST',
+                mode: 'cors',
+                headers: {'Content-Type': 'application/json'},
+            }).then(() => {
+                fetch('http://localhost:8080/inbox', {
+                    method: 'GET',
+                    mode: 'cors',
+                    headers: {'Content-Type': 'application/json'},
+                }).then((response) => {
+                        return response.json();
+                    }
+                ).then(data => {
+                    this.setState({stuffList: data});
+                })
+            })
+        }
+
     render(){
-        const stuffList = this.state.stuffList.map((note) => <OrgRow key={note.inboxId} stuff={note}/>)
+            const stuffList = this.state.stuffList.map((note) => <OrgRow key={note.inboxId} stuff={note} organizerClick={this.handleOrganizerClick}/>)
+
         return(
             <div id="organizer">
                 {stuffList}
