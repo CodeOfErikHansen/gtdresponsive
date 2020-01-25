@@ -5,14 +5,21 @@ class OrgRow extends React.Component {
         super(props);
         this.state = {
             show: false,
+            endpoint: '',
         }
     }
-    showModal = () => {
-        this.setState({ show: true });
+    showModal = (e) => {
+        this.setState({
+            show: true,
+            endpoint: e.target.innerText,
+        });
     };
 
     hideModal = () => {
-        this.setState({ show: false });
+        this.setState({
+            show: false,
+            endpoint: '',
+        });
     };
 
 
@@ -21,12 +28,18 @@ class OrgRow extends React.Component {
         return(
             <div>
                 <Modal show={this.state.show} handleClose={this.hideModal}>
-                    <p>What is up</p>
+                    <div>{lineItem.note}</div>
+                    <p>This is the button I clicked: {this.state.endpoint}</p>
+                    <button>Create more Actions</button>
+                    <ul>
+                        <li>Next Action 1</li>
+                        <li>Next Action 2</li>
+                    </ul>
                 </Modal>
                 <div>{lineItem.note}</div>
                 <button value={lineItem.inboxId} onClick={this.props.organizerClick} className="button" id="two-minute">O</button>
                 <button value={lineItem.inboxId} onClick={this.showModal} className="button" id="project-candidate">T</button>
-                <button value={lineItem.inboxId} className="button" id="wish-list">S</button>
+                <button value={lineItem.inboxId} onClick={this.showModal} className="button" id="wish-list">S</button>
                 <button value={lineItem.inboxId} className="button" id="archive">R</button>
                 <button value={lineItem.inboxId} onClick={this.props.organizerClick} className="button" id="discard">X</button>
             </div>
