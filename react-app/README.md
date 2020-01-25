@@ -1,34 +1,14 @@
-# nano-react-app-template
-
-The template project for [nano-react-app](https://github.com/adrianmcli/nano-react-app).
-
-- `npm start` — This will spawn a development server with a default port of `1234`.
-- `npm run build` — This will output a production build in the `dist` directory.
-
-## Custom port
-
-You can use the `-p` flag to specify a port for development. To do this, you can either run `npm start` with an additional flag:
-
-```
-npm start -- -p 3000
-```
-
-Or edit the `start` script directly:
-
-```
-parcel index.html -p 3000
-```
-
-## Adding styles
-
-You can use CSS files with simple ES2015 `import` statements in your Javascript:
-
-```js
-import "./index.css";
-```
-
-## Babel transforms
-
-The Babel preset [babel-preset-nano-react-app](https://github.com/adrianmcli/babel-preset-nano-react-app) and a small amount of configuration is used to support the same transforms that Create React App supports.
-
-The Babel configuration lives inside `package.json` and will override an external `.babelrc` file, so if you want to use `.babelrc` remember to delete the `babel` property inside `package.json`.
+Remainder for app to be at 1.0
+- [ ] Clean up styling before deployment.
+- [ ] Spring Security
+- [ ] Organizer can create projects with next steps 
+- [ ] Organizer can create record with just a description
+- [ ] Project/someday page has expandable items with the next steps
+- [ ] Record page has titles that expand for description
+- [ ] Hot Seat page has next steps grouped in collapsable contexts.
+- [ ] Can drag and drop next actions in a project. Only the top item for each project should be in hot seat.(?? show follow up action)
+- [ ] Allow tracts of work in a project. A project with multiple tracts can have multiple next steps, but only one per track.
+- [ ] Can mark a project and actions as complete. If an action as part of a project is completed the project appears as a header for that item in the complete page
+      If a project is marked as completed than all actions are also shown in the complete page. This is weird actually. Rethink it
+      
+      
