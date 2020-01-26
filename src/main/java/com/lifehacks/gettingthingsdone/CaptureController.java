@@ -4,10 +4,7 @@ import com.lifehacks.gettingthingsdone.models.Context;
 import com.lifehacks.gettingthingsdone.models.GtdProject;
 import com.lifehacks.gettingthingsdone.models.Status;
 import com.lifehacks.gettingthingsdone.models.Stuff;
-import com.lifehacks.gettingthingsdone.repositories.ContextRepository;
-import com.lifehacks.gettingthingsdone.repositories.GtdProjectRepository;
-import com.lifehacks.gettingthingsdone.repositories.StatusRepository;
-import com.lifehacks.gettingthingsdone.repositories.StuffRepository;
+import com.lifehacks.gettingthingsdone.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +22,8 @@ public class CaptureController {
     GtdProjectRepository projectRepo;
     @Autowired
     ContextRepository contextRepo;
+    @Autowired
+    ActionRepository actionRepo;
 
     @GetMapping("/inbox")
     public Iterable<Stuff> getInbox() {
@@ -62,6 +61,8 @@ public class CaptureController {
 
     @PostMapping(path = "/projects", consumes="application/json", produces = "application/json")
     public GtdProject createProject(@RequestBody GtdProject project) {
+        actionRepo.saveAll(project.getProjectActions());
+
         return projectRepo.save(project);
     }
 

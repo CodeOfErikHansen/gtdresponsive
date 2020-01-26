@@ -62,15 +62,19 @@ class OrgRow extends React.Component {
                     "projectName": this.state.projectName,
                     "projectSummary": "This is a test",
                     "status": this.state.projectStatus,
-                    "projectActions": this.state.action
+                    "projectActions": [this.state.action],
                 }
             )
-        }).then(()=> this.props.modalClick(this.props.stuff.inboxId))
+        }).then((res)=> {
+            if(res.ok) {
+                this.props.modalClick(this.props.stuff.inboxId)
+            }
+        }
+            )
     };
     handleChange = (e) => {
       this.setState({
-          ...state,
-          [e.target.name]: e.target.value,
+          projectName: e.target.value,
       })
     };
     handleStatusSelect = (e) => {
@@ -79,10 +83,26 @@ class OrgRow extends React.Component {
         })
     };
     handleContextSelect = (e) => {
+        let actionMod = this.state.action;
+        actionMod.context = this.state.contexts[e.target.value -1];
         this.setState({
-             context: this.state.status[e.target.value -1],
+             action: actionMod,
         })
-    }
+    };
+    handleActionNameClick = (e) => {
+        let actionMod = this.state.action;
+        actionMod.actionTitle = e.target.value;
+        this.setState({
+            action: actionMod
+        })
+    };
+    handleActionDescriptionClick = (e) => {
+        let actionMod = JSON.parse(JSON.stringify(this.state.action));
+        actionMod.actionDescription = e.target.value;
+        this.setState({
+            action: actionMod,
+        })
+    };
 
 
     addAction = () => {
@@ -102,7 +122,13 @@ class OrgRow extends React.Component {
                        </select>
                        <button type="button" onClick={this.addAction}>Add Action</button>
                        <div id="action-holder">
-                           <Action context={this.state.contexts} action={this.state.action} onChange={this.handleChange} onSelect={this.handleContextSelect}/>
+                           <Action context={this.state.contexts}
+                                   action={this.state.action}
+                                   onChange={this.handleChange}
+                                   onSelect={this.handleContextSelect}
+                                   onAction={this.handleActionNameClick}
+                                   onDescription={this.handleActionDescriptionClick}
+                           />
                        </div>
                        <input type="submit" value="Create"/>
                    </form>

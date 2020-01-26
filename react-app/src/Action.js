@@ -12,11 +12,11 @@ class Action extends React.Component {
         return <div>
             <label>
                 Name:
-                <input type="text" name="actionTitle" value={this.props.action.actionTitle} onChange={this.props.onChange}/>
+                <input type="text" name="actionTitle" value={this.props.action.actionTitle} onChange={this.props.onAction}/>
             </label>
-            <label>
+            <label>d
                 Desciption:
-                <input type="text" name = "actionDescription" value={this.props.action.actionDescription} onChange={this.props.onChange}/>
+                <input type="text" name = "actionDescription" value={this.props.action.actionDescription} onChange={this.props.onDescription}/>
             </label>
             <select value={this.props.context.contextId} onChange={this.props.onSelect}>
                 {contextOptions}
