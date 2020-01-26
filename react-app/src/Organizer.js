@@ -7,6 +7,7 @@ class Organizer extends React.Component{
             stuffList: [],
         };
         this.handleOrganizerClick = this.handleOrganizerClick.bind(this);
+        this.handleModalClick = this.handleModalClick.bind(this)
     }
 
     async componentDidMount() {
@@ -39,9 +40,26 @@ class Organizer extends React.Component{
                 })
             })
         }
+        handleModalClick = (id) => {
+            fetch('http://localhost:8080/inbox/'+id, {
+                method: 'DELETE',
+            }).then(() => {
+                fetch('http://localhost:8080/inbox', {
+                    method: 'GET',
+                    mode: 'cors',
+                    headers: {'Content-Type': 'application/json'},
+                }).then((response) => {
+                        return response.json();
+                    }
+                ).then(data => {
+                    this.setState({stuffList: data});
+                })
+            })
+
+        };
 
     render(){
-            const stuffList = this.state.stuffList.map((note) => <OrgRow key={note.inboxId} stuff={note} organizerClick={this.handleOrganizerClick}/>)
+            const stuffList = this.state.stuffList.map((note) => <OrgRow key={note.inboxId} stuff={note} organizerClick={this.handleOrganizerClick} modalClick={this.handleModalClick}/>)
 
         return(
             <div id="organizer">

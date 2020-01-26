@@ -2,6 +2,7 @@ import React from "react";
 import Inbox from "./Inbox";
 import Organizer from "./Organizer";
 import FinishedList from "./FinishedList";
+import Projects from './Projects'
 import './root.css'
 class App extends React.Component {
     constructor(props){
@@ -24,6 +25,7 @@ class App extends React.Component {
                 <nav>
                     <div id="nav-inbox" onClick={this.handleNavClick}>InBox</div>
                     <div id="nav-org" onClick={this.handleNavClick}>Organizer</div>
+                    <div id="projects" onClick={this.handleNavClick}>Projects</div>
                     <div id="two-minute" onClick={this.handleNavClick}>O</div>
                     <div id="discard" onClick={this.handleNavClick}>X</div>
                 </nav>
@@ -33,6 +35,9 @@ class App extends React.Component {
               }
               { (this.state.activePage == 'Organizer') &&
                   <Organizer/>
+              }
+              { (this.state.activePage == 'Projects') &&
+                <Projects/>
               }
               { (this.state.activePage == 'O') &&
               <FinishedList version={this.state.activePage}/>

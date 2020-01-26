@@ -6,9 +6,10 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 
 @Getter @Setter @Entity
-public class Project {
+public class GtdProject {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long projectId;
 
@@ -23,5 +24,5 @@ public class Project {
     private Status status;
 
     @OneToMany
-    private ArrayList<Action> projectActions;
+    private List<Action> projectActions;
 }

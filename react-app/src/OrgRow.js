@@ -1,4 +1,5 @@
 import React from 'react';
+import Action from './Action'
 
 class OrgRow extends React.Component {
     constructor(props) {
@@ -6,8 +7,37 @@ class OrgRow extends React.Component {
         this.state = {
             show: false,
             endpoint: '',
+            projectName: this.props.stuff.note,
+            projectStatus: '',
+            status: [],
+            contexts: [],
+            action: {
+               actionTitle: '',
+               actionDescription: '',
+               context: ''
+            }
+
         }
     }
+
+    async componentDidMount(){
+        fetch('http://localhost:8080/status',{
+            method: 'GET',
+        }).then((response => {
+            return response.json();
+        })).then(data => {
+            this.setState({status: data})
+        })
+
+        fetch('http://localhost:8080/contexts',{
+            method: 'GET',
+        }).then((response => {
+            return response.json();
+        })).then(data => {
+            this.setState({contexts: data})
+        })
+    }
+
     showModal = (e) => {
         this.setState({
             show: true,
@@ -21,20 +51,61 @@ class OrgRow extends React.Component {
             endpoint: '',
         });
     };
+    handleSubmit = (e) => {
+        e.preventDefault();
 
+        fetch('http://localhost:8080/projects', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(
+                {
+                    "projectName": this.state.projectName,
+                    "projectSummary": "This is a test",
+                    "status": this.state.projectStatus,
+                    "projectActions": this.state.action
+                }
+            )
+        }).then(()=> this.props.modalClick(this.props.stuff.inboxId))
+    };
+    handleChange = (e) => {
+      this.setState({
+          ...state,
+          [e.target.name]: e.target.value,
+      })
+    };
+    handleStatusSelect = (e) => {
+        this.setState({
+            projectStatus: this.state.status[e.target.value -1],
+        })
+    };
+    handleContextSelect = (e) => {
+        this.setState({
+             context: this.state.status[e.target.value -1],
+        })
+    }
+
+
+    addAction = () => {
+
+    };
 
     render(){
         const lineItem = this.props.stuff;
+        const statusList = this.state.status.map(type => <option key={type.statusId} value={type.statusId}>{type.name}</option>)
         return(
             <div>
                 <Modal show={this.state.show} handleClose={this.hideModal}>
-                    <div>{lineItem.note}</div>
-                    <p>This is the button I clicked: {this.state.endpoint}</p>
-                    <button>Create more Actions</button>
-                    <ul>
-                        <li>Next Action 1</li>
-                        <li>Next Action 2</li>
-                    </ul>
+                   <form onSubmit={this.handleSubmit}>
+                       <input name="projectName" type="text" value={this.state.projectName} onChange={this.handleChange}/>
+                       <select name="projectStatus" value={this.state.projectStatus.statusId} onChange={this.handleStatusSelect}>
+                           {statusList}
+                       </select>
+                       <button type="button" onClick={this.addAction}>Add Action</button>
+                       <div id="action-holder">
+                           <Action context={this.state.contexts} action={this.state.action} onChange={this.handleChange} onSelect={this.handleContextSelect}/>
+                       </div>
+                       <input type="submit" value="Create"/>
+                   </form>
                 </Modal>
                 <div>{lineItem.note}</div>
                 <button value={lineItem.inboxId} onClick={this.props.organizerClick} className="button" id="two-minute">O</button>
