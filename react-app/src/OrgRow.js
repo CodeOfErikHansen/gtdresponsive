@@ -28,7 +28,7 @@ class OrgRow extends React.Component {
         }).then((response => {
             return response.json();
         })).then(data => {
-            this.setState({status: data})
+            this.setState({status: data.filter((item) => item.name == 'On Deck' || item.name == 'Someday')})
         })
 
         fetch('http://localhost:8080/contexts',{
@@ -81,7 +81,7 @@ class OrgRow extends React.Component {
     };
     handleStatusSelect = (e) => {
         this.setState({
-            projectStatus: this.state.status[e.target.value -1],
+            projectStatus: this.state.status[e.target.value],
         })
     };
     handleContextSelect = (i, e) => {
@@ -125,7 +125,7 @@ class OrgRow extends React.Component {
 
     render(){
         const lineItem = this.props.stuff;
-        const statusList = this.state.status.map(type => <option key={type.statusId} value={type.statusId}>{type.name}</option>)
+        const statusList = this.state.status.map((type, index) => <option key={type.statusId} value={index}>{type.name}</option>)
         const actionsList = this.state.actions.map((action, index) => <Action key={index}
                                                                     context={this.state.contexts}
                                                                      action={action}
@@ -139,7 +139,7 @@ class OrgRow extends React.Component {
                 <Modal show={this.state.show} handleClose={this.hideModal}>
                    <form onSubmit={this.handleSubmit}>
                        <input name="projectName" type="text" value={this.state.projectName} onChange={this.handleChange}/>
-                       <select name="projectStatus" value={this.state.projectStatus.statusId} onChange={this.handleStatusSelect}>
+                       <select name="projectStatus" onChange={this.handleStatusSelect}>
                            {statusList}
                        </select>
                        <button type="button" onClick={this.addAction}>Add Action</button>
@@ -152,7 +152,6 @@ class OrgRow extends React.Component {
                 <div>{lineItem.note}</div>
                 <button value={lineItem.inboxId} onClick={this.props.organizerClick} className="button" id="two-minute">O</button>
                 <button value={lineItem.inboxId} onClick={this.showModal} className="button" id="project-candidate">T</button>
-                <button value={lineItem.inboxId} onClick={this.showModal} className="button" id="wish-list">S</button>
                 <button value={lineItem.inboxId} className="button" id="archive">R</button>
                 <button value={lineItem.inboxId} onClick={this.props.organizerClick} className="button" id="discard">X</button>
             </div>
