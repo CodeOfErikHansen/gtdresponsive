@@ -6,10 +6,12 @@ class OrgRow extends React.Component {
         super(props);
         this.state = {
             show: false,
-            endpoint: '',
-            projectName: this.props.stuff.note,
-            projectStatus: '',
-            status: [],
+            modalType: '',
+            name: this.props.stuff.note,
+            description: '',
+            status: '',
+            recordStatus: '',
+            statusList: [],
             contexts: [],
             actions: [
                  {
@@ -28,7 +30,10 @@ class OrgRow extends React.Component {
         }).then((response => {
             return response.json();
         })).then(data => {
-            this.setState({status: data.filter((item) => item.name == 'On Deck' || item.name == 'Someday')})
+            this.setState({
+                statusList: data.filter((item) => item.name == 'On Deck' || item.name == 'Someday'),
+                recordStatus: data.filter(status => status.name == 'Archive')
+            })
         })
 
         fetch('http://localhost:8080/contexts',{
@@ -40,13 +45,19 @@ class OrgRow extends React.Component {
         })
     }
 
-    showModal = (e) => {
+    showProjectModal = (e) => {
         this.setState({
             show: true,
-            endpoint: e.target.innerText,
+            modalType: 'project',
         });
     };
 
+    showRecordModal = (e) => {
+        this.setState({
+            show: true,
+            modalType: 'record',
+        });
+    };
     hideModal = () => {
         this.setState({
             show: false,
@@ -55,33 +66,58 @@ class OrgRow extends React.Component {
     };
     handleSubmit = (e) => {
         e.preventDefault();
-
-        fetch('http://localhost:8080/projects', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(
-                {
-                    "projectName": this.state.projectName,
-                    "projectSummary": "This is a test",
-                    "status": this.state.projectStatus,
-                    "projectActions": this.state.actions,
+        if(this.state.modalType == 'project') {
+            fetch('http://localhost:8080/projects', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(
+                    {
+                        "projectName": this.state.name,
+                        "projectSummary": this.state.description,
+                        "status": this.state.status,
+                        "projectActions": this.state.actions,
+                    }
+                )
+            }).then((res) => {
+                    if (res.ok) {
+                        this.props.modalClick(this.props.stuff.inboxId)
+                    }
                 }
             )
-        }).then((res)=> {
-            if(res.ok) {
-                this.props.modalClick(this.props.stuff.inboxId)
-            }
         }
+
+        if(this.state.modalType == 'record') {
+            fetch('http://localhost:8080/records', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(
+                    {
+                        "recordName": this.state.name,
+                        "recordBody": this.state.description,
+                        "status": this.state.recordStatus[0],
+                    }
+                )
+            }).then((res) => {
+                    if (res.ok) {
+                        this.props.modalClick(this.props.stuff.inboxId)
+                    }
+                }
             )
+        }
     };
     handleChange = (e) => {
       this.setState({
-          projectName: e.target.value,
+          name: e.target.value,
       })
+    };
+    handleDescriptionChange = (e) => {
+        this.setState({
+            description: e.target.value,
+        })
     };
     handleStatusSelect = (e) => {
         this.setState({
-            projectStatus: this.state.status[e.target.value],
+            status: this.state.statusList[e.target.value],
         })
     };
     handleContextSelect = (i, e) => {
@@ -125,7 +161,7 @@ class OrgRow extends React.Component {
 
     render(){
         const lineItem = this.props.stuff;
-        const statusList = this.state.status.map((type, index) => <option key={type.statusId} value={index}>{type.name}</option>)
+        const statusList = this.state.statusList.map((type, index) => <option key={type.statusId} value={index}>{type.name}</option>)
         const actionsList = this.state.actions.map((action, index) => <Action key={index}
                                                                     context={this.state.contexts}
                                                                      action={action}
@@ -137,22 +173,32 @@ class OrgRow extends React.Component {
         return(
             <div>
                 <Modal show={this.state.show} handleClose={this.hideModal}>
-                   <form onSubmit={this.handleSubmit}>
-                       <input name="projectName" type="text" value={this.state.projectName} onChange={this.handleChange}/>
-                       <select name="projectStatus" onChange={this.handleStatusSelect}>
-                           {statusList}
-                       </select>
-                       <button type="button" onClick={this.addAction}>Add Action</button>
-                       <div id="action-holder">
-                           {actionsList}
-                       </div>
-                       <input type="submit" value="Create"/>
-                   </form>
+
+                        <form onSubmit={this.handleSubmit}>
+                            <input name="name" type="text" value={this.state.name}
+                                   onChange={this.handleChange}/>
+                            <select name="status" onChange={this.handleStatusSelect}>
+                                {statusList}
+                            </select>
+                            <textarea name="description" rows="4" value={this.state.description} onChange={this.handleDescriptionChange}/>
+                            {this.state.modalType == 'project' ?
+                                <div>
+                                    <button type="button" onClick={this.addAction}>Add Action</button>
+                                    <div id="action-holder">
+                                        {actionsList}
+                                    </div>
+                                </div>
+                                : <></>
+                            }
+                            <input type="submit" value="Create"/>
+                        </form>
+
+                    }
                 </Modal>
                 <div>{lineItem.note}</div>
                 <button value={lineItem.inboxId} onClick={this.props.organizerClick} className="button" id="two-minute">O</button>
-                <button value={lineItem.inboxId} onClick={this.showModal} className="button" id="project-candidate">T</button>
-                <button value={lineItem.inboxId} className="button" id="archive">R</button>
+                <button value={lineItem.inboxId} onClick={this.showProjectModal} className="button" id="project-candidate">T</button>
+                <button value={lineItem.inboxId} onClick={this.showRecordModal} className="button" id="archive">R</button>
                 <button value={lineItem.inboxId} onClick={this.props.organizerClick} className="button" id="discard">X</button>
             </div>
         )
@@ -160,9 +206,6 @@ class OrgRow extends React.Component {
 }
 
 /*
- TODO: In this modal I want to autofill the note property on stuff as the description/title.
- TODO: The button I click to open the modal can set the status either on the front end or back end.
- TODO: It creates a project template where I can click to add next actions as dynamically created list
  TODO: ??Dropdown to assign to a current project. Which loads that project and fills the text as a new task in that project.
  */
 

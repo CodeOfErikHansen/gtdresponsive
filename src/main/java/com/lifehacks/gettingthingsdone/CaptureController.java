@@ -1,9 +1,6 @@
 package com.lifehacks.gettingthingsdone;
 
-import com.lifehacks.gettingthingsdone.models.Context;
-import com.lifehacks.gettingthingsdone.models.GtdProject;
-import com.lifehacks.gettingthingsdone.models.Status;
-import com.lifehacks.gettingthingsdone.models.Stuff;
+import com.lifehacks.gettingthingsdone.models.*;
 import com.lifehacks.gettingthingsdone.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +21,8 @@ public class CaptureController {
     ContextRepository contextRepo;
     @Autowired
     ActionRepository actionRepo;
+    @Autowired
+    RecordRepository recordRepo;
 
     @GetMapping("/inbox")
     public Iterable<Stuff> getInbox() {
@@ -66,7 +65,11 @@ public class CaptureController {
         return projectRepo.save(project);
     }
 
-    @GetMapping(path="/status")
+    @PostMapping(path = "/records", consumes="application/json", produces = "application/json")
+    public Record createRecord(@RequestBody Record record) {
+        return recordRepo.save(record);
+    }
+        @GetMapping(path="/status")
     public Iterable<Status> getStatuses(){
         return statusRepo.findAll();
     }
