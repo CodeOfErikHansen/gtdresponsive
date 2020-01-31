@@ -1,7 +1,7 @@
 Remainder for app to be at 1.0
 - [ ] Clean up styling before deployment.
 - [ ] Spring Security
-- [ ] Organizer can create projects with next steps 
+- [X] Organizer can create projects with next steps 
 - [ ] Organizer can create record with just a description
 - [ ] Project/someday page has expandable items with the next steps
 - [ ] Record page has titles that expand for description
@@ -12,3 +12,6 @@ Remainder for app to be at 1.0
       If a project is marked as completed than all actions are also shown in the complete page. This is weird actually. Rethink it
       
       
+Notes for tonight: The idea that I found is to have an empty Action object that I can spread operator into the actions array.
+Then it does the whole render by mapping in each action in the array onto the item. So actions.map(() => {put into an action component}) and render that.
+If done this way we just add an empty action and it will get rendered

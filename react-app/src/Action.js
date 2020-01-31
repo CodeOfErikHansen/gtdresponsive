@@ -21,6 +21,7 @@ class Action extends React.Component {
             <select value={this.props.context.contextId} onChange={this.props.onSelect}>
                 {contextOptions}
             </select>
+            <button onClick={this.props.onRemove}>X</button>
         </div>
     }
 }

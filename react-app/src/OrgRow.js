@@ -11,11 +11,13 @@ class OrgRow extends React.Component {
             projectStatus: '',
             status: [],
             contexts: [],
-            action: {
-               actionTitle: '',
-               actionDescription: '',
-               context: ''
-            }
+            actions: [
+                 {
+                    actionTitle: '',
+                    actionDescription: '',
+                    context: ''
+                },
+            ]
 
         }
     }
@@ -62,7 +64,7 @@ class OrgRow extends React.Component {
                     "projectName": this.state.projectName,
                     "projectSummary": "This is a test",
                     "status": this.state.projectStatus,
-                    "projectActions": [this.state.action],
+                    "projectActions": this.state.actions,
                 }
             )
         }).then((res)=> {
@@ -82,36 +84,56 @@ class OrgRow extends React.Component {
             projectStatus: this.state.status[e.target.value -1],
         })
     };
-    handleContextSelect = (e) => {
-        let actionMod = this.state.action;
-        actionMod.context = this.state.contexts[e.target.value -1];
+    handleContextSelect = (i, e) => {
+        let actions = [...this.state.actions];
+        actions[i].context = this.state.contexts[e.target.value-1];
         this.setState({
-             action: actionMod,
+             action: actions
         })
     };
-    handleActionNameClick = (e) => {
-        let actionMod = this.state.action;
-        actionMod.actionTitle = e.target.value;
+    handleActionNameChange = (i, e) => {
+        let actions = [...this.state.actions];
+        actions[i].actionTitle = e.target.value;
         this.setState({
-            action: actionMod
+            actions: actions
         })
     };
-    handleActionDescriptionClick = (e) => {
-        let actionMod = JSON.parse(JSON.stringify(this.state.action));
-        actionMod.actionDescription = e.target.value;
+    handleActionDescriptionChange = (i, e) => {
+        let actions = [...this.state.actions];
+        actions[i].actionDescription = e.target.value;
         this.setState({
-            action: actionMod,
+            actions: actions,
         })
     };
 
 
     addAction = () => {
-
+        const newAction = {
+            actionTitle: '',
+            actionDescription: '',
+            context: ''
+        };
+        this.setState({
+             actions: [...this.state.actions, newAction ]
+        })
+    };
+    removeAction = (i) => {
+      let actions = [...this.state.actions];
+      actions.splice(i,1);
+      this.setState({actions});
     };
 
     render(){
         const lineItem = this.props.stuff;
         const statusList = this.state.status.map(type => <option key={type.statusId} value={type.statusId}>{type.name}</option>)
+        const actionsList = this.state.actions.map((action, index) => <Action key={index}
+                                                                    context={this.state.contexts}
+                                                                     action={action}
+                                                                     onSelect={this.handleContextSelect.bind(this, index)}
+                                                                     onAction={this.handleActionNameChange.bind(this, index)}
+                                                                     onDescription={this.handleActionDescriptionChange.bind(this, index)}
+                                                                     onRemove={this.removeAction}/>
+                                                                     );
         return(
             <div>
                 <Modal show={this.state.show} handleClose={this.hideModal}>
@@ -122,13 +144,7 @@ class OrgRow extends React.Component {
                        </select>
                        <button type="button" onClick={this.addAction}>Add Action</button>
                        <div id="action-holder">
-                           <Action context={this.state.contexts}
-                                   action={this.state.action}
-                                   onChange={this.handleChange}
-                                   onSelect={this.handleContextSelect}
-                                   onAction={this.handleActionNameClick}
-                                   onDescription={this.handleActionDescriptionClick}
-                           />
+                           {actionsList}
                        </div>
                        <input type="submit" value="Create"/>
                    </form>
