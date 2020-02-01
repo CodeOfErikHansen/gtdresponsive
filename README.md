@@ -1,5 +1,3 @@
-Questions
- * Difference between mysql and starter jpa dependencies
- * application properties for mysql
- * Response entities are better for the controller. Get that sorted
- * Did you know having spring security turned on is a problem for accessing your endpoints. I DIDN"T
+This is still pre version 1.0.0
+I am working on this independently so that shouldn't matter.
+
