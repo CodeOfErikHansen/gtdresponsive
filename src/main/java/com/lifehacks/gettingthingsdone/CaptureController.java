@@ -49,7 +49,9 @@ public class CaptureController {
     }
 
     @GetMapping("/X")
-    public Iterable<Stuff> getTrashed() {return stuffRepo.findAllByStatus(statusRepo.findByName("Trashed"));}
+    public Iterable<Stuff> getTrashedStuff() {return stuffRepo.findAllByStatus(statusRepo.findByName("Trashed"));}
+    @GetMapping("/record/X")
+    public Iterable<Record> getTrashedRecords() {return recordRepo.findAllByStatus(statusRepo.findByName("Trashed"));}
 
     @PostMapping(path ="/X/{inboxId}")
     public Stuff deleteNote(@PathVariable Long inboxId) {
@@ -69,7 +71,8 @@ public class CaptureController {
     public Record createRecord(@RequestBody Record record) {
         return recordRepo.save(record);
     }
-        @GetMapping(path="/status")
+
+    @GetMapping(path="/status")
     public Iterable<Status> getStatuses(){
         return statusRepo.findAll();
     }
@@ -78,8 +81,23 @@ public class CaptureController {
     public Iterable<Context> getContexts(){
         return contextRepo.findAll();
     }
-    @GetMapping(path="projects")
+    @GetMapping(path="/projects")
     public Iterable<GtdProject> getProjects(){
         return projectRepo.findAll();
     }
+    @GetMapping(path="/records")
+    public Iterable<Record> getRecords(){
+        return recordRepo.findAllByStatus(statusRepo.findByName("Archive"));
+    }
+    @PutMapping(path = "/records", consumes="application/json", produces = "application/json")
+    public Record updateRecord(@RequestBody Record record) {
+        return recordRepo.save(record);
+    }
+    @PutMapping(path = "/deleterecord", consumes="application/json", produces = "application/json")
+    public Record deleteRecord(@RequestBody Record record) {
+        record.setStatus(statusRepo.findByName("Trashed"));
+        return recordRepo.save(record);
+    }
+
+
 }

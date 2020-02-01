@@ -177,12 +177,14 @@ class OrgRow extends React.Component {
                         <form onSubmit={this.handleSubmit}>
                             <input name="name" type="text" value={this.state.name}
                                    onChange={this.handleChange}/>
-                            <select name="status" onChange={this.handleStatusSelect}>
-                                {statusList}
-                            </select>
+
                             <textarea name="description" rows="4" value={this.state.description} onChange={this.handleDescriptionChange}/>
                             {this.state.modalType == 'project' ?
                                 <div>
+                                <select name="status" onChange={this.handleStatusSelect}>
+                                    {statusList}
+                                </select>
+
                                     <button type="button" onClick={this.addAction}>Add Action</button>
                                     <div id="action-holder">
                                         {actionsList}
