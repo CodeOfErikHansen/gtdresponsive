@@ -92,3 +92,7 @@ nav {
 .display-none {
     display: none;
 }
+
+.project{
+    border: solid black 1px;
+}

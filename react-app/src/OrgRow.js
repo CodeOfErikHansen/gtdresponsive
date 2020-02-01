@@ -168,7 +168,7 @@ class OrgRow extends React.Component {
                                                                      onSelect={this.handleContextSelect.bind(this, index)}
                                                                      onAction={this.handleActionNameChange.bind(this, index)}
                                                                      onDescription={this.handleActionDescriptionChange.bind(this, index)}
-                                                                     onRemove={this.removeAction}/>
+                                                                     onRemove={this.removeAction.bind(this, index)}/>
                                                                      );
         return(
             <div>

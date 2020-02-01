@@ -98,6 +98,11 @@ public class CaptureController {
         record.setStatus(statusRepo.findByName("Trashed"));
         return recordRepo.save(record);
     }
-
+    @PutMapping(path="/projects", consumes="application/json", produces="application/json")
+    public GtdProject updateProject(@RequestBody GtdProject project){
+        actionRepo.saveAll(project.getProjectActions());
+        //ToDo: it doesn't want to stopo on the line below via debugger. Why is that?
+        return projectRepo.save(project);
+    }
 
 }
