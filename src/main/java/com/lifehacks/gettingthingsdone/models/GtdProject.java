@@ -3,6 +3,7 @@ package com.lifehacks.gettingthingsdone.models;
 import lombok.Generated;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -23,6 +24,6 @@ public class GtdProject {
     @JoinColumn(name="status_id", nullable = false)
     private Status status;
 
-    @OneToMany
-    private List<Action> projectActions;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Track> projectTracks;
 }

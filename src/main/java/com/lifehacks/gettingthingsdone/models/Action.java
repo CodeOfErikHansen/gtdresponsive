@@ -21,6 +21,10 @@ public class Action {
     @JoinColumn(name="context_id", nullable=false)
     private Context context;
 
+    @ManyToOne
+    @JoinColumn(name="status_id", nullable=false)
+    private Status status;
+
     @Column
     private Integer sortOrder;
 

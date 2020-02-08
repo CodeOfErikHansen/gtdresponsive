@@ -14,14 +14,18 @@ class OrgRow extends React.Component {
             recordStatus: '',
             statusList: [],
             contexts: [],
-            actions: [
-                 {
-                    actionTitle: '',
-                    actionDescription: '',
-                    context: '',
-                     sortOrder: 1
-                },
-            ]
+            tracks: [
+                {trackActions: [
+                    {
+                        actionTitle: '',
+                        actionDescription: '',
+                        context: '',
+                        sortOrder: 1,
+                        status: ''
+                    },
+                ],
+                trackName: '',}],
+
 
         }
     }
@@ -69,6 +73,17 @@ class OrgRow extends React.Component {
     handleSubmit = (e) => {
         e.preventDefault();
         if(this.state.modalType == 'project') {
+            let tracks = [...this.state.tracks];
+            let actions;
+            for(let i=0; i<tracks.length;i++){
+                actions = [...this.state.tracks[i].trackActions];
+                for(let j =0; j < actions.length; j++){
+                    actions[j].status = this.state.status;
+                }
+            }
+            this.setState({
+                tracks: tracks,
+            });
             fetch('http://localhost:8080/projects', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
@@ -77,7 +92,7 @@ class OrgRow extends React.Component {
                         "projectName": this.state.name,
                         "projectSummary": this.state.description,
                         "status": this.state.status,
-                        "projectActions": this.state.actions,
+                        "projectTracks": this.state.tracks,
                     }
                 )
             }).then((res) => {
@@ -112,6 +127,13 @@ class OrgRow extends React.Component {
           name: e.target.value,
       })
     };
+    handleTrackNameChange = (ti, e) => {
+        let tracks = [...this.state.tracks];
+        tracks[ti].trackName = e.target.value;
+        this.setState({
+            tracks: tracks,
+        })
+    };
     handleDescriptionChange = (e) => {
         this.setState({
             description: e.target.value,
@@ -122,77 +144,115 @@ class OrgRow extends React.Component {
             status: this.state.statusList[e.target.value],
         })
     };
-    handleContextSelect = (i, e) => {
-        let actions = [...this.state.actions];
-        actions[i].context = this.state.contexts[e.target.value-1];
+    handleContextSelect = (i,ti, e) => {
+        let tracks = [...this.state.tracks];
+        tracks[ti].trackActions[i].context = this.state.contexts[e.target.value-1];
         this.setState({
-             action: actions
+             tracks: tracks,
         })
     };
-    handleActionNameChange = (i, e) => {
-        let actions = [...this.state.actions];
-        actions[i].actionTitle = e.target.value;
+    handleActionNameChange = (i,ti, e) => {
+        let tracks = [...this.state.tracks];
+        tracks[ti].trackActions[i].actionTitle = e.target.value;
         this.setState({
-            actions: actions
+            tracks: tracks,
         })
     };
-    handleActionDescriptionChange = (i, e) => {
-        let actions = [...this.state.actions];
-        actions[i].actionDescription = e.target.value;
+    handleActionDescriptionChange = (i,ti, e) => {
+        let tracks = [...this.state.tracks];
+        tracks[ti].trackActions[i].actionDescription = e.target.value;
         this.setState({
-            actions: actions,
+            tracks: tracks,
         })
     };
-    handleActionSortChange = (i, e) => {
+    handleActionSortChange = (i,ti, e) => {
         e.preventDefault();
-        let actions = [...this.state.actions];
+        debugger
+        let tracks = [...this.state.tracks];
         if(e.target.value === '1'){
-            actions[i].sortOrder -= 1;
-            actions[i-1].sortOrder += 1;
+            tracks[ti].trackActions[i].sortOrder -= 1;
+            tracks[ti].trackActions[i-1].sortOrder += 1;
         }
         if(e.target.value === '-1'){
-            actions[i].sortOrder += 1;
-            actions[i+1].sortOrder -= 1;
+            tracks[ti].trackActions[i].sortOrder += 1;
+            tracks[ti].trackActions[i+1].sortOrder -= 1;
         }
-
+        const actions = sortActions(tracks[ti].trackActions);
+        tracks[ti].trackActions = actions;
         this.setState({
-            actions: sortActions(actions),
+            tracks: tracks,
         })
     };
 
 
-    addAction = () => {
+    addAction = (ti) => {
         const newAction = {
             actionTitle: '',
             actionDescription: '',
             context: '',
-            sortOrder: this.state.actions.length+1
+            sortOrder: this.state.tracks[ti].trackActions.length+1,
+            status: '',
         };
+        const tracks = [...this.state.tracks];
+        tracks[ti].trackActions.push(newAction)
         this.setState({
-             actions: [...this.state.actions, newAction ]
+             tracks: tracks,
         })
     };
-    removeAction = (i) => {
-      let actions = [...this.state.actions];
-      actions.splice(i,1);
-      this.setState({actions});
+    removeAction = (ai, ti) => {
+      const tracks = [...this.state.tracks];
+      tracks[ti].trackActions.splice(ai,1);
+      this.setState({tracks: tracks});
+    };
+
+    addTrack = () => {
+       const newTrack = {
+           trackName: '',
+           trackActions: [
+               {
+                   actionTitle: '',
+                   actionDescription: '',
+                   context: '',
+                   sortOrder: 1,
+                   status: '',
+               }
+           ]
+       };
+       this.setState({tracks: [...this.state.tracks, newTrack]});
+    };
+    trackRemove = (ti) => {
+        const tracks = [...this.state.tracks];
+        tracks.splice(ti, 1);
+        this.setState({tracks: tracks});
     };
 
     render(){
         const lineItem = this.props.stuff;
         const statusList = this.state.statusList.map((type, index) => <option key={type.statusId} value={index}>{type.name}</option>)
-        const actionsList = sortActions(this.state.actions).map((action, index) => <Action key={index}
-                                                                    context={this.state.contexts}
-                                                                     action={action}
-                                                                     onSelect={this.handleContextSelect.bind(this, index)}
-                                                                     onAction={this.handleActionNameChange.bind(this, index)}
-                                                                     onDescription={this.handleActionDescriptionChange.bind(this, index)}
-                                                                     onRemove={this.removeAction.bind(this, index)}
-                                                                                           onSortChange={this.handleActionSortChange.bind(this, index)}
-                                                                                           length={this.state.actions.length}
+        const trackList = this.state.tracks.map((track, trackIndex) => {
+            return (
+                <>
+                    <label>
+                        Name:
+                        <input type="text" name="trackName" value={track.trackName} onChange={this.handleTrackNameChange.bind(this, trackIndex)}/>
+                    </label>
+                    <button onClick={this.trackRemove.bind(this, trackIndex)}>Remove Track</button>
+                    <button type="button" onClick={this.addAction.bind(this, trackIndex)}>Add Action</button>
+                    {sortActions(track.trackActions).map((action, index) => <Action key={index}
+                                                                                   context={this.state.contexts}
+                                                                                   action={action}
+                                                                                   onSelect={this.handleContextSelect.bind(this, index, trackIndex)}
+                                                                                   onAction={this.handleActionNameChange.bind(this, index, trackIndex)}
+                                                                                   onDescription={this.handleActionDescriptionChange.bind(this, index, trackIndex)}
+                                                                                   onRemove={this.removeAction.bind(this, index, trackIndex)}
+                                                                                   onSortChange={this.handleActionSortChange.bind(this, index, trackIndex)}
+                                                                                   length={track.trackActions.length}
 
-            />
-                                                                     );
+                />
+                    )};}
+                </>
+            )
+        });
         return(
             <div>
                 <Modal show={this.state.show} handleClose={this.hideModal}>
@@ -207,10 +267,9 @@ class OrgRow extends React.Component {
                                 <select name="status" onChange={this.handleStatusSelect}>
                                     {statusList}
                                 </select>
-
-                                    <button type="button" onClick={this.addAction}>Add Action</button>
+                                    <button type="button" onClick={this.addTrack}>Add Track</button>
                                     <div id="action-holder">
-                                        {actionsList}
+                                        {trackList}
                                     </div>
                                 </div>
                                 : <></>

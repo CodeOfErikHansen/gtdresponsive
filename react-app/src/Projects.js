@@ -11,7 +11,18 @@ class Projects extends React.Component {
             show: false,
             statusList: [],
             contexts: [],
-            actions: [],
+            tracks: [{
+                trackName: '',
+                trackActions: [
+                    {
+                        actionTitle: '',
+                        actionDescription: '',
+                        context: '',
+                        sortOrder: 1,
+                        status: '',
+                    }
+                ]
+            }],
             name: '',
             description: '',
             id: '',
@@ -32,7 +43,7 @@ class Projects extends React.Component {
             this.setState({
                 statusList: data.filter((item) => item.name !== 'Inbox' && item.name !== 'Archive'),
             })
-        })
+        });
 
         fetch('http://localhost:8080/contexts',{
             method: 'GET',
@@ -46,7 +57,7 @@ class Projects extends React.Component {
         const project = this.state.projects.filter(project => project.projectId == e.target.value);
         this.setState({
             show:true,
-            actions: sortActions(project[0].projectActions),
+            tracks: project[0].projectTracks,
             name: project[0].projectName,
             description: project[0].projectSummary,
             id: project[0].projectId,
@@ -56,7 +67,7 @@ class Projects extends React.Component {
     hideModal = (e) => {
         this.setState({
             show:false,
-            actions: [],
+            tracks: [],
             name: '',
             description: '',
             id: '',
@@ -78,64 +89,82 @@ class Projects extends React.Component {
             status: this.state.statusList[e.target.value],
         })
     };
-    handleContextSelect = (i, e) => {
-        let actions = [...this.state.actions];
-        actions[i].context = this.state.contexts[e.target.value-1];
+    handleContextSelect = (i,ti, e) => {
+        let tracks = [...this.state.tracks];
+        tracks[ti].trackActions[i].context = this.state.contexts[e.target.value-1];
         this.setState({
-            action: actions
+            tracks: tracks,
         })
     };
-    handleActionNameChange = (i, e) => {
-        let actions = [...this.state.actions];
-        actions[i].actionTitle = e.target.value;
+
+    handleActionNameChange = (i,ti, e) => {
+        let tracks = [...this.state.tracks];
+        tracks[ti].trackActions[i].actionTitle = e.target.value;
         this.setState({
-            actions: actions
+            tracks: tracks,
         })
     };
-    handleActionDescriptionChange = (i, e) => {
-        let actions = [...this.state.actions];
-        actions[i].actionDescription = e.target.value;
+
+    handleActionDescriptionChange = (i,ti, e) => {
+        let tracks = [...this.state.tracks];
+        tracks[ti].trackActions[i].actionDescription = e.target.value;
         this.setState({
-            actions: actions,
+            tracks: tracks,
         })
     };
-    handleActionSortChange = (i, e) => {
+    handleActionSortChange = (i,ti, e) => {
         e.preventDefault();
-        let actions = [...this.state.actions];
+        debugger
+        let tracks = [...this.state.tracks];
         if(e.target.value === '1'){
-            actions[i].sortOrder -= 1;
-            actions[i-1].sortOrder += 1;
+            tracks[ti].trackActions[i].sortOrder -= 1;
+            tracks[ti].trackActions[i-1].sortOrder += 1;
         }
         if(e.target.value === '-1'){
-            actions[i].sortOrder += 1;
-            actions[i+1].sortOrder -= 1;
+            tracks[ti].trackActions[i].sortOrder += 1;
+            tracks[ti].trackActions[i+1].sortOrder -= 1;
         }
-
+        const actions = sortActions(tracks[ti].trackActions);
+        tracks[ti].trackActions = actions;
         this.setState({
-            actions: sortActions(actions),
+            tracks: tracks,
         })
     };
 
 
-    addAction = () => {
+    addAction = (ti) => {
         const newAction = {
             actionTitle: '',
             actionDescription: '',
             context: '',
-            sortOrder: this.state.actions.length+1
+            sortOrder: this.state.tracks[ti].trackActions.length+1,
+            status: ''
         };
+        const tracks = [...this.state.tracks];
+        tracks[ti].trackActions.push(newAction)
         this.setState({
-            actions: [...this.state.actions, newAction ]
+            tracks: tracks,
         })
     };
-    removeAction = (i) => {
-        let actions = [...this.state.actions];
-        actions.splice(i,1);
-        this.setState({actions});
+    removeAction = (ai, ti) => {
+        const tracks = [...this.state.tracks];
+        tracks[ti].trackActions.splice(ai,1);
+        this.setState({tracks: tracks});
     };
 
     handleSubmit = (e) => {
         e.preventDefault();
+        let tracks = [...this.state.tracks];
+        let actions;
+        for(let i=0; i<tracks.length;i++){
+            actions = [...this.state.tracks[i].trackActions];
+            for(let j =0; j < actions.length; j++){
+                actions[j].status = this.state.status;
+            }
+        }
+        this.setState({
+            tracks: tracks,
+        });
         fetch('http://localhost:8080/projects', {
             method: 'PUT',
             headers: {'Content-Type': 'application/json'},
@@ -145,7 +174,7 @@ class Projects extends React.Component {
                     "projectName":this.state.name,
                     "projectSummary":this.state.description,
                     "status":this.state.status,
-                    "projectActions":this.state.actions,
+                    "projectTracks":this.state.tracks,
                 }
             )
         }).then((res) => {
@@ -155,7 +184,7 @@ class Projects extends React.Component {
                         projectName: this.state.name,
                         projectSummary: this.state.description,
                         status: this.state.status,
-                        projectActions: this.state.actions,
+                        projectTracks: this.state.tracks,
                     };
                     let projects = [...this.state.projects];
                     let index =-1;
@@ -178,6 +207,33 @@ class Projects extends React.Component {
             }
         )
     };
+    handleTrackNameChange = (ti, e) => {
+        let tracks = [...this.state.tracks];
+        tracks[ti].trackName = e.target.value;
+        this.setState({
+            tracks: tracks,
+        })
+    };
+    addTrack = () => {
+        const newTrack = {
+            trackName: '',
+            trackActions: [
+                {
+                    actionTitle: '',
+                    actionDescription: '',
+                    context: '',
+                    sortOrder: 1,
+                    status: ''
+                }
+            ]
+        };
+        this.setState({tracks: [...this.state.tracks, newTrack]});
+    };
+    trackRemove = (ti) => {
+        const tracks = [...this.state.tracks];
+        tracks.splice(ti, 1);
+        this.setState({tracks: tracks});
+    };
 
 
     render() {
@@ -186,31 +242,52 @@ class Projects extends React.Component {
                <div className="project" key={project.projectId}>
                 <h4>Project: {project.projectName}</h4>
                    <button  value={project.projectId} onClick={this.showModal}>Edit</button>
-                <p>About: {project.projectSummary}</p>
-                   {sortActions(project.projectActions).map(action => {
+                   <p>About: {project.projectSummary}</p>
+                   { project.projectTracks.map(track => {
                        return(
-                           <div className="action" key={action.sortOrder}>
-                               <h5>Task: {action.actionTitle}</h5>
+                           <div>
+                               Track Name {track.trackName}
+                               {sortActions(track.trackActions).map(action => {
+                                   return(
+                                       <div className="action" key={action.sortOrder}>
+                                           <h5>Task: {action.actionTitle}</h5>
 
-                               <h6> Context: {action.context.contextName}</h6>
-                               <p>Action needed: {action.actionDescription}</p>
+                                           <h6> Context: {action.context.contextName}</h6>
+                                           <p>Action needed: {action.actionDescription}</p>
+                                       </div>
+                                   )
+                               })}
                            </div>
                        )
-                   })}
+                   })
+                   }
                </div>
            )});
         const statusList = this.state.statusList.map((type, index) => <option key={type.statusId} value={index}>{type.name}</option>)
-        const actionsList = this.state.actions.map((action, index) => <Action key={index}
-                                                                              context={this.state.contexts}
-                                                                              action={action}
-                                                                              onSelect={this.handleContextSelect.bind(this, index)}
-                                                                              onAction={this.handleActionNameChange.bind(this, index)}
-                                                                              onDescription={this.handleActionDescriptionChange.bind(this, index)}
-                                                                              onRemove={this.removeAction.bind(this, index)}
-                                                                              onSortChange={this.handleActionSortChange.bind(this, index)}
-                                                                              length={this.state.actions.length}
-            />
-        );
+        const trackList = this.state.tracks.map((track, trackIndex) => {
+            return (
+                <>
+                    <label>
+                        Name:
+                        <input type="text" name="trackName" value={track.trackName} onChange={this.handleTrackNameChange.bind(this, trackIndex)}/>
+                    </label>
+                    <button onClick={this.trackRemove.bind(this, trackIndex)}>Remove Track</button>
+                    <button type="button" onClick={this.addAction.bind(this, trackIndex)}>Add Action</button>
+                    {sortActions(track.trackActions).map((action, index) => <Action key={index}
+                                                                                    context={this.state.contexts}
+                                                                                    action={action}
+                                                                                    onSelect={this.handleContextSelect.bind(this, index, trackIndex)}
+                                                                                    onAction={this.handleActionNameChange.bind(this, index, trackIndex)}
+                                                                                    onDescription={this.handleActionDescriptionChange.bind(this, index, trackIndex)}
+                                                                                    onRemove={this.removeAction.bind(this, index, trackIndex)}
+                                                                                    onSortChange={this.handleActionSortChange.bind(this, index, trackIndex)}
+                                                                                    length={track.trackActions.length}
+
+                        />
+                    )};}
+                </>
+            )
+        });
 
         return (
             <>
@@ -225,9 +302,9 @@ class Projects extends React.Component {
                                 {statusList}
                             </select>
 
-                            <button type="button" onClick={this.addAction}>Add Action</button>
+                            <button type="button" onClick={this.addTrack}>Add Track</button>
                             <div id="action-holder">
-                                {actionsList}
+                                {trackList}
                             </div>
                         </div>
                         <input type="submit"   value="Edit"/>

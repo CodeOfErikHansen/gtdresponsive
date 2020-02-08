@@ -2,9 +2,11 @@ package com.lifehacks.gettingthingsdone;
 
 import com.lifehacks.gettingthingsdone.models.*;
 import com.lifehacks.gettingthingsdone.repositories.*;
+import com.lifehacks.gettingthingsdone.services.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 
@@ -23,6 +25,8 @@ public class CaptureController {
     ActionRepository actionRepo;
     @Autowired
     RecordRepository recordRepo;
+    @Autowired
+    ProjectService projectService;
 
     @GetMapping("/inbox")
     public Iterable<Stuff> getInbox() {
@@ -62,8 +66,6 @@ public class CaptureController {
 
     @PostMapping(path = "/projects", consumes="application/json", produces = "application/json")
     public GtdProject createProject(@RequestBody GtdProject project) {
-        actionRepo.saveAll(project.getProjectActions());
-
         return projectRepo.save(project);
     }
 
@@ -83,7 +85,7 @@ public class CaptureController {
     }
     @GetMapping(path="/projects")
     public Iterable<GtdProject> getProjects(){
-        return projectRepo.findAll();
+        return projectService.getProjectsAndPendingActions(projectRepo.findAll());
     }
     @GetMapping(path="/records")
     public Iterable<Record> getRecords(){
@@ -100,9 +102,19 @@ public class CaptureController {
     }
     @PutMapping(path="/projects", consumes="application/json", produces="application/json")
     public GtdProject updateProject(@RequestBody GtdProject project){
-        actionRepo.saveAll(project.getProjectActions());
-        //ToDo: it doesn't want to stopo on the line below via debugger. Why is that?
         return projectRepo.save(project);
     }
+    @PutMapping(path="hotseat/O", consumes = "application/json", produces = "application/json")
+    public GtdProject completeAction(@RequestBody GtdProject project){
+        return projectRepo.save(project);
+    }
+    @PutMapping(path="hotseat/X", consumes = "application/json", produces = "application/json")
+    public GtdProject trashAction(@RequestBody GtdProject project){
+        return projectRepo.save(project);
+    }
+    @GetMapping(path="/hotseat")
+    public Iterable<GtdProject> getActiveProjects(){
+        return projectService.getProjectsAndPendingActions(projectRepo.findAllByStatus(statusRepo.findByName("On Deck")));
 
+    }
 }
