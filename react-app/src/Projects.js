@@ -59,6 +59,8 @@ class Projects extends React.Component {
             actions: [],
             name: '',
             description: '',
+            id: '',
+            status: ''
         })
     };
     handleChange = (e) => {
@@ -98,6 +100,7 @@ class Projects extends React.Component {
         })
     };
     handleActionSortChange = (i, e) => {
+        e.preventDefault();
         let actions = [...this.state.actions];
         if(e.target.value === '1'){
             actions[i].sortOrder -= 1;
@@ -145,7 +148,35 @@ class Projects extends React.Component {
                     "projectActions":this.state.actions,
                 }
             )
-        })
+        }).then((res) => {
+                if(res.ok){
+                    const project = {
+                        projectId: this.state.id,
+                        projectName: this.state.name,
+                        projectSummary: this.state.description,
+                        status: this.state.status,
+                        projectActions: this.state.actions,
+                    };
+                    let projects = [...this.state.projects];
+                    let index =-1;
+                    for(let i =0; i < projects.length; i++){
+                        if(projects[i].projectId === project.projectId){
+                            index = i;
+                        }
+                    }
+                    projects[index] = project;
+                    this.setState({
+                        show: false,
+                        actions: [],
+                        name: '',
+                        description: '',
+                        projects: projects,
+                        id: '',
+                        status: '',
+                    })
+                }
+            }
+        )
     };
 
 

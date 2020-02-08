@@ -144,10 +144,19 @@ class OrgRow extends React.Component {
         })
     };
     handleActionSortChange = (i, e) => {
+        e.preventDefault();
         let actions = [...this.state.actions];
-        actions[i].sortOrder = e.target.value;
+        if(e.target.value === '1'){
+            actions[i].sortOrder -= 1;
+            actions[i-1].sortOrder += 1;
+        }
+        if(e.target.value === '-1'){
+            actions[i].sortOrder += 1;
+            actions[i+1].sortOrder -= 1;
+        }
+
         this.setState({
-            actions: actions,
+            actions: sortActions(actions),
         })
     };
 
@@ -179,7 +188,10 @@ class OrgRow extends React.Component {
                                                                      onAction={this.handleActionNameChange.bind(this, index)}
                                                                      onDescription={this.handleActionDescriptionChange.bind(this, index)}
                                                                      onRemove={this.removeAction.bind(this, index)}
-                                                                                           onSortChange={this.handleActionSortChange.bind(this, index)}/>
+                                                                                           onSortChange={this.handleActionSortChange.bind(this, index)}
+                                                                                           length={this.state.actions.length}
+
+            />
                                                                      );
         return(
             <div>
