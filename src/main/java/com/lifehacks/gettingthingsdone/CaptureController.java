@@ -5,6 +5,7 @@ import com.lifehacks.gettingthingsdone.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 
@@ -83,7 +84,19 @@ public class CaptureController {
     }
     @GetMapping(path="/projects")
     public Iterable<GtdProject> getProjects(){
-        return projectRepo.findAll();
+        Iterable<GtdProject> projectList = projectRepo.findAll();
+        ArrayList<Action> workingList;
+        for (GtdProject project: projectList
+        ) {
+            workingList = new ArrayList<>();
+            for(Action action: project.getProjectActions()){
+                if(action.getSortOrder() > 0){
+                    workingList.add(action);
+                }
+            }
+            project.setProjectActions(workingList);
+        }
+        return projectList;
     }
     @GetMapping(path="/records")
     public Iterable<Record> getRecords(){
@@ -104,5 +117,31 @@ public class CaptureController {
         //ToDo: it doesn't want to stopo on the line below via debugger. Why is that?
         return projectRepo.save(project);
     }
-
+    //TODO: These don't save the object correctly. I suspect it needs the project
+    @PutMapping(path="hotseat/O", consumes = "application/json", produces = "application/json")
+    public GtdProject completeAction(@RequestBody GtdProject project){
+        actionRepo.saveAll(project.getProjectActions());
+        return projectRepo.save(project);
+    }
+    @PutMapping(path="hotseat/X", consumes = "application/json", produces = "application/json")
+    public GtdProject trashAction(@RequestBody GtdProject project){
+        actionRepo.saveAll(project.getProjectActions());
+        return projectRepo.save(project);
+    }
+    @GetMapping(path="/hotseat")
+    public Iterable<GtdProject> getActiveProjects(){
+        Iterable<GtdProject> projectList = projectRepo.findAllByStatus(statusRepo.findByName("On Deck"));
+        ArrayList<Action> workingList;
+        for (GtdProject project: projectList
+             ) {
+            workingList = new ArrayList<>();
+            for(Action action: project.getProjectActions()){
+                if(action.getSortOrder() > 0){
+                    workingList.add(action);
+                }
+            }
+            project.setProjectActions(workingList);
+        }
+        return projectList;
+    }
 }

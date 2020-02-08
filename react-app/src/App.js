@@ -4,6 +4,7 @@ import Organizer from "./Organizer";
 import FinishedList from "./FinishedList";
 import Projects from './Projects'
 import Records from './Records'
+import HotSeat from "./HotSeat";
 import './root.css'
 class App extends React.Component {
     constructor(props){
@@ -25,6 +26,7 @@ class App extends React.Component {
                 <h1 id="app-title">Get Shit Done</h1>
                 <nav>
                     <div id="nav-inbox" onClick={this.handleNavClick}>InBox</div>
+                    <div id="hot-seat" onClick={this.handleNavClick}>HotSeat</div>
                     <div id="nav-org" onClick={this.handleNavClick}>Organizer</div>
                     <div id="projects" onClick={this.handleNavClick}>Projects</div>
                     <div id="records" onClick={this.handleNavClick}>Records</div>
@@ -35,6 +37,9 @@ class App extends React.Component {
               { (this.state.activePage == 'InBox') &&
                   <Inbox/>
               }
+
+              {(this.state.activePage == 'HotSeat') && <HotSeat/>}
+
               { (this.state.activePage == 'Organizer') &&
                   <Organizer/>
               }

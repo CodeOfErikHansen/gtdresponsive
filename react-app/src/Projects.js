@@ -32,7 +32,7 @@ class Projects extends React.Component {
             this.setState({
                 statusList: data.filter((item) => item.name !== 'Inbox' && item.name !== 'Archive'),
             })
-        })
+        });
 
         fetch('http://localhost:8080/contexts',{
             method: 'GET',
@@ -122,7 +122,9 @@ class Projects extends React.Component {
             actionTitle: '',
             actionDescription: '',
             context: '',
-            sortOrder: this.state.actions.length+1
+            sortOrder: this.state.actions.length+1,
+            status: this.state.status,
+
         };
         this.setState({
             actions: [...this.state.actions, newAction ]

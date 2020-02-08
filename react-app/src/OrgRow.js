@@ -19,7 +19,7 @@ class OrgRow extends React.Component {
                     actionTitle: '',
                     actionDescription: '',
                     context: '',
-                     sortOrder: 1
+                     sortOrder: 1,
                 },
             ]
 
@@ -69,6 +69,13 @@ class OrgRow extends React.Component {
     handleSubmit = (e) => {
         e.preventDefault();
         if(this.state.modalType == 'project') {
+            let actions = [...this.state.actions];
+            for(let i =0; i < actions.length; i++){
+                actions[i].status = this.state.status;
+            }
+            this.setState({
+                actions : actions,
+            });
             fetch('http://localhost:8080/projects', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
