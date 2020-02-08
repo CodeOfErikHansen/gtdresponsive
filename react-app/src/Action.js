@@ -21,6 +21,8 @@ class Action extends React.Component {
             <select value={this.props.context.contextId} onChange={this.props.onSelect}>
                 {contextOptions}
             </select>
+            {this.props.action.sortOrder !== 1 && <button onClick={this.props.onSortChange} value="1">+</button>}
+            {this.props.action.sortOrder !== this.props.length && <button onClick={this.props.onSortChange} value="-1">-</button>}
             <button onClick={this.props.onRemove}>X</button>
         </div>
     }

@@ -21,5 +21,8 @@ public class Action {
     @JoinColumn(name="context_id", nullable=false)
     private Context context;
 
+    @Column
+    private Integer sortOrder;
+
 
 }

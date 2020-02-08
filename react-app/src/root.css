@@ -96,3 +96,6 @@ nav {
 .project{
     border: solid black 1px;
 }
+.action{
+    border: solid pink 3px;
+}

@@ -1,5 +1,7 @@
 import React from 'react';
 import Action from "./Action";
+import { sortActions } from "./helper";
+
 
 class Projects extends React.Component {
     constructor(props) {
@@ -44,7 +46,7 @@ class Projects extends React.Component {
         const project = this.state.projects.filter(project => project.projectId == e.target.value);
         this.setState({
             show:true,
-            actions: project[0].projectActions,
+            actions: sortActions(project[0].projectActions),
             name: project[0].projectName,
             description: project[0].projectSummary,
             id: project[0].projectId,
@@ -95,13 +97,29 @@ class Projects extends React.Component {
             actions: actions,
         })
     };
+    handleActionSortChange = (i, e) => {
+        let actions = [...this.state.actions];
+        if(e.target.value === '1'){
+            actions[i].sortOrder -= 1;
+            actions[i-1].sortOrder += 1;
+        }
+        if(e.target.value === '-1'){
+            actions[i].sortOrder += 1;
+            actions[i+1].sortOrder -= 1;
+        }
+
+        this.setState({
+            actions: sortActions(actions),
+        })
+    };
 
 
     addAction = () => {
         const newAction = {
             actionTitle: '',
             actionDescription: '',
-            context: ''
+            context: '',
+            sortOrder: this.state.actions.length+1
         };
         this.setState({
             actions: [...this.state.actions, newAction ]
@@ -129,16 +147,18 @@ class Projects extends React.Component {
             )
         })
     };
+
+
     render() {
         const projectList = this.state.projects.map(project => {
            return(
-               <div className="project">
+               <div className="project" key={project.projectId}>
                 <h4>Project: {project.projectName}</h4>
                    <button  value={project.projectId} onClick={this.showModal}>Edit</button>
                 <p>About: {project.projectSummary}</p>
-                   {project.projectActions.map(action => {
+                   {sortActions(project.projectActions).map(action => {
                        return(
-                           <div>
+                           <div className="action" key={action.sortOrder}>
                                <h5>Task: {action.actionTitle}</h5>
 
                                <h6> Context: {action.context.contextName}</h6>
@@ -155,7 +175,10 @@ class Projects extends React.Component {
                                                                               onSelect={this.handleContextSelect.bind(this, index)}
                                                                               onAction={this.handleActionNameChange.bind(this, index)}
                                                                               onDescription={this.handleActionDescriptionChange.bind(this, index)}
-                                                                              onRemove={this.removeAction.bind(this, index)}/>
+                                                                              onRemove={this.removeAction.bind(this, index)}
+                                                                              onSortChange={this.handleActionSortChange.bind(this, index)}
+                                                                              length={this.state.actions.length}
+            />
         );
 
         return (

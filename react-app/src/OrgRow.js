@@ -1,5 +1,6 @@
 import React from 'react';
 import Action from './Action'
+import { sortActions} from "./helper";
 
 class OrgRow extends React.Component {
     constructor(props) {
@@ -17,7 +18,8 @@ class OrgRow extends React.Component {
                  {
                     actionTitle: '',
                     actionDescription: '',
-                    context: ''
+                    context: '',
+                     sortOrder: 1
                 },
             ]
 
@@ -141,13 +143,21 @@ class OrgRow extends React.Component {
             actions: actions,
         })
     };
+    handleActionSortChange = (i, e) => {
+        let actions = [...this.state.actions];
+        actions[i].sortOrder = e.target.value;
+        this.setState({
+            actions: actions,
+        })
+    };
 
 
     addAction = () => {
         const newAction = {
             actionTitle: '',
             actionDescription: '',
-            context: ''
+            context: '',
+            sortOrder: this.state.actions.length+1
         };
         this.setState({
              actions: [...this.state.actions, newAction ]
@@ -162,13 +172,14 @@ class OrgRow extends React.Component {
     render(){
         const lineItem = this.props.stuff;
         const statusList = this.state.statusList.map((type, index) => <option key={type.statusId} value={index}>{type.name}</option>)
-        const actionsList = this.state.actions.map((action, index) => <Action key={index}
+        const actionsList = sortActions(this.state.actions).map((action, index) => <Action key={index}
                                                                     context={this.state.contexts}
                                                                      action={action}
                                                                      onSelect={this.handleContextSelect.bind(this, index)}
                                                                      onAction={this.handleActionNameChange.bind(this, index)}
                                                                      onDescription={this.handleActionDescriptionChange.bind(this, index)}
-                                                                     onRemove={this.removeAction.bind(this, index)}/>
+                                                                     onRemove={this.removeAction.bind(this, index)}
+                                                                                           onSortChange={this.handleActionSortChange.bind(this, index)}/>
                                                                      );
         return(
             <div>
