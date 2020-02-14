@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface StuffRepository extends CrudRepository<Stuff, Long> {
     List<Stuff> findAllByStatus(Status status);
+    Iterable<Stuff> findAllByStatusOrStatus(Status status1, Status status2);
 }

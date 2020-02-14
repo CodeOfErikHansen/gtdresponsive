@@ -30,8 +30,7 @@ class App extends React.Component {
                     <div id="nav-org" onClick={this.handleNavClick}>Organizer</div>
                     <div id="projects" onClick={this.handleNavClick}>Projects</div>
                     <div id="records" onClick={this.handleNavClick}>Records</div>
-                    <div id="two-minute" onClick={this.handleNavClick}>O</div>
-                    <div id="discard" onClick={this.handleNavClick}>X</div>
+                    <div id="complete" onClick={this.handleNavClick}>Complete</div>
                 </nav>
             </div>
               { (this.state.activePage == 'InBox') &&
@@ -50,10 +49,7 @@ class App extends React.Component {
                   <Records/>
 
               }
-              { (this.state.activePage == 'O') &&
-              <FinishedList version={this.state.activePage}/>
-              }
-              { (this.state.activePage == 'X') &&
+              { (this.state.activePage == 'Complete') &&
               <FinishedList version={this.state.activePage}/>
               }
 

@@ -42,8 +42,6 @@ public class CaptureController {
     public void deleteStuff(@PathVariable Long id){
         stuffRepo.delete(stuffRepo.findById(id).get());
     }
-    @GetMapping("/O")
-    public Iterable<Stuff> getComplete() {return stuffRepo.findAllByStatus(statusRepo.findByName("Complete"));}
 
     @PostMapping(path ="/O/{inboxId}")
     public Stuff completeNote(@PathVariable Long inboxId) {
@@ -52,10 +50,15 @@ public class CaptureController {
         return stuffRepo.save(item.get());
     }
 
-    @GetMapping("/X")
-    public Iterable<Stuff> getTrashedStuff() {return stuffRepo.findAllByStatus(statusRepo.findByName("Trashed"));}
-    @GetMapping("/record/X")
+    @GetMapping("/complete/stuff")
+    public Iterable<Stuff> getCompleteStuff() {
+        return stuffRepo.findAllByStatusOrStatus(statusRepo.findByName("Trashed"), statusRepo.findByName("Complete"));}
+    @GetMapping("/complete/record")
     public Iterable<Record> getTrashedRecords() {return recordRepo.findAllByStatus(statusRepo.findByName("Trashed"));}
+    @GetMapping("/complete/projects")
+    public Iterable<GtdProject> getProjectCompletion(){
+        return projectRepo.findAll();
+    }
 
     @PostMapping(path ="/X/{inboxId}")
     public Stuff deleteNote(@PathVariable Long inboxId) {

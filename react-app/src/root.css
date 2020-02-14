@@ -99,3 +99,10 @@ nav {
 .action{
     border: solid pink 3px;
 }
+
+.complete {
+    background-color: lightgreen;
+}
+.trashed {
+    background-color: lightcoral;
+}
