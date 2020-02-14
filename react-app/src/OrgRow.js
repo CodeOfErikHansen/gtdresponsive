@@ -37,10 +37,11 @@ class OrgRow extends React.Component {
             return response.json();
         })).then(data => {
             this.setState({
-                statusList: data.filter((item) => item.name == 'On Deck' || item.name == 'Someday'),
-                recordStatus: data.filter(status => status.name == 'Archive')
+                statusList: data.filter((item) => item.name === 'On Deck' || item.name === 'Someday'),
+                recordStatus: data.filter(status => status.name === 'Archive'),
+                status: data.filter(item => item.name === 'On Deck')[0],
             })
-        })
+        });
 
         fetch('http://localhost:8080/contexts',{
             method: 'GET',
@@ -264,7 +265,7 @@ class OrgRow extends React.Component {
                             <textarea name="description" rows="4" value={this.state.description} onChange={this.handleDescriptionChange}/>
                             {this.state.modalType == 'project' ?
                                 <div>
-                                <select name="status" onChange={this.handleStatusSelect}>
+                                <select name="status" value={this.state.status} onChange={this.handleStatusSelect}>
                                     {statusList}
                                 </select>
                                     <button type="button" onClick={this.addTrack}>Add Track</button>
