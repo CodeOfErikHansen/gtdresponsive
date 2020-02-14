@@ -14,5 +14,6 @@ Remainder for app to be at 1.0
 - [ ] Req: I think I make a single page for complete. Stuff dumps in and is green or red. records can come in as red. 
 Projects dump in and can be green, red or white. Actions are listed under projects and have same color. If a project is white
 it means that it is here to serve as a header for a complete or trashed action. same holds true actions
-- [ ] Req: Create new Contexts
+- [X] Req: Create new Contexts
+- [ ] Assign a note to a existing project-track
       

@@ -234,6 +234,27 @@ class Projects extends React.Component {
         tracks.splice(ti, 1);
         this.setState({tracks: tracks});
     };
+    createContext = (e) => {
+        e.preventDefault();
+        fetch('http://localhost:8080/context', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({"contextName": this.state.contextName})
+            }
+        ).then((res) => {
+            if(res.ok){
+                return res.json();
+            }
+        }).then((data)=> {
+            this.setState({
+                contexts: [...this.state.contexts, data],
+                contextName: '',
+            })
+        });
+    };
+    handleContextChange = (e) => {
+        this.setState({contextName: e.target.value})
+    };
 
 
     render() {
@@ -292,6 +313,10 @@ class Projects extends React.Component {
         return (
             <>
                 <Modal show={this.state.show} handleClose={this.hideModal}>
+                    <form onSubmit={this.createContext}>
+                        <input name="context-creator" type="text" value={this.state.contextName} onChange={this.handleContextChange}/>
+                        <input type="submit" value="Add Context"/>
+                    </form>
                     <form onSubmit={this.handleSubmit}>
                         <input name="name" type="text" value={this.state.name}
                                onChange={this.handleChange}/>

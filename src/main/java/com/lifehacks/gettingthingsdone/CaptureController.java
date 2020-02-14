@@ -83,6 +83,10 @@ public class CaptureController {
     public Iterable<Context> getContexts(){
         return contextRepo.findAll();
     }
+    @PostMapping(path="/context")
+    public Context createContext(@RequestBody Context context) {
+        return contextRepo.save(context);
+    }
     @GetMapping(path="/projects")
     public Iterable<GtdProject> getProjects(){
         return projectService.getProjectsAndPendingActions(projectRepo.findAll());

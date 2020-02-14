@@ -14,6 +14,7 @@ class OrgRow extends React.Component {
             recordStatus: '',
             statusList: [],
             contexts: [],
+            contextName: '',
             tracks: [
                 {trackActions: [
                     {
@@ -226,6 +227,27 @@ class OrgRow extends React.Component {
         tracks.splice(ti, 1);
         this.setState({tracks: tracks});
     };
+    createContext = (e) => {
+        e.preventDefault();
+        fetch('http://localhost:8080/context', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({"contextName": this.state.contextName})
+            }
+            ).then((res) => {
+                if(res.ok){
+                    return res.json();
+                }
+        }).then((data)=> {
+            this.setState({
+                contexts: [...this.state.contexts, data],
+                contextName: '',
+            })
+        });
+    };
+    handleContextChange = (e) => {
+        this.setState({contextName: e.target.value})
+    };
 
     render(){
         const lineItem = this.props.stuff;
@@ -257,6 +279,10 @@ class OrgRow extends React.Component {
         return(
             <div>
                 <Modal show={this.state.show} handleClose={this.hideModal}>
+                    <form onSubmit={this.createContext}>
+                        <input name="context-creator" type="text" value={this.state.contextName} onChange={this.handleContextChange}/>
+                            <input type="submit" value="Add Context"/>
+                    </form>
 
                         <form onSubmit={this.handleSubmit}>
                             <input name="name" type="text" value={this.state.name}
@@ -290,9 +316,6 @@ class OrgRow extends React.Component {
     }
 }
 
-/*
- TODO: ??Dropdown to assign to a current project. Which loads that project and fills the text as a new task in that project.
- */
 
 const Modal = ({ handleClose, show, children }) => {
     const showHideClassName = show ? "modal display-block" : "modal display-none";
