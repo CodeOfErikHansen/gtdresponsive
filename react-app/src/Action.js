@@ -7,8 +7,11 @@ class Action extends React.Component {
     }
 
     render() {
-        const contextOptions = this.props.context.map((context) =>
-            <option key={context.contextId} value={context.contextId}>{context.contextName}</option>)
+        const contextOptions = this.props.context.map((context) =>{
+            return(
+                    <option key={context.contextId} value={context.contextId}>{context.contextName}</option>
+            )}
+    );
         return <div>
             <label>
                 Name:
@@ -18,7 +21,7 @@ class Action extends React.Component {
                 Desciption:
                 <input type="text" name = "actionDescription" value={this.props.action.actionDescription} onChange={this.props.onDescription}/>
             </label>
-            <select value={this.props.context.contextId} onChange={this.props.onSelect}>
+            <select defaultValue={this.props.action.context.contextId} onChange={this.props.onSelect}>
                 {contextOptions}
             </select>
             {this.props.action.sortOrder !== 1 && <button onClick={this.props.onSortChange} value="1">+</button>}

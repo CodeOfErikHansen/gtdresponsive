@@ -29,23 +29,22 @@ class HotSeat extends React.Component {
         let project = this.state.projects[pi];
         const status = e.target.value === 'O' ? this.state.statusList.filter((status) => status.name === 'Complete')[0] : this.state.statusList.filter((status) => status.name === 'Trashed')[0];
         project.projectTracks[ti].trackActions[ai].status = status;
-        for(let action of project.projectTracks[ti].trackActions){
+        for (let action of project.projectTracks[ti].trackActions) {
             action.sortOrder -= 1;
         }
-        fetch('http://localhost:8080/hotseat/'+e.target.value, {
-            method: 'PUT',
+        fetch('http://localhost:8080/hotseat/' + e.target.value, {
+            method: 'PATCH',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(project)
         }).then(res => {
-                return res.json()
-        }).then(data => {
-            let projects = [...this.state.projects];
-            project = data;
-            project.projectTracks[ti].trackActions.shift();
-            projects[pi] = project;
-            this.setState({
-                projects: projects,
-            })
+            if (res.ok) {
+                let projects = [...this.state.projects];
+                project.projectTracks[ti].trackActions.shift();
+                projects[pi] = project;
+                this.setState({
+                    projects: projects,
+                })
+            }
         })
     };
     render() {

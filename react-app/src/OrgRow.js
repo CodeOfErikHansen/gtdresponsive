@@ -291,7 +291,7 @@ class OrgRow extends React.Component {
                             <textarea name="description" rows="4" value={this.state.description} onChange={this.handleDescriptionChange}/>
                             {this.state.modalType == 'project' ?
                                 <div>
-                                <select name="status" value={this.state.status} onChange={this.handleStatusSelect}>
+                                <select name="status"  onChange={this.handleStatusSelect}>
                                     {statusList}
                                 </select>
                                     <button type="button" onClick={this.addTrack}>Add Track</button>

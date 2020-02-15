@@ -26,6 +26,8 @@ public class CaptureController {
     @Autowired
     RecordRepository recordRepo;
     @Autowired
+    TrackRepository trackRepo;
+    @Autowired
     ProjectService projectService;
 
     @GetMapping("/inbox")
@@ -111,13 +113,14 @@ public class CaptureController {
     public GtdProject updateProject(@RequestBody GtdProject project){
         return projectRepo.save(project);
     }
-    @PutMapping(path="hotseat/O", consumes = "application/json", produces = "application/json")
+    @PatchMapping(path="hotseat/O", consumes = "application/json", produces = "application/json")
     public GtdProject completeAction(@RequestBody GtdProject project){
-        return projectRepo.save(project);
+       return projectRepo.save(projectService.returnProjectWithAllCompleteActions(project));
     }
-    @PutMapping(path="hotseat/X", consumes = "application/json", produces = "application/json")
+    @PatchMapping(path="hotseat/X", consumes = "application/json", produces = "application/json")
     public GtdProject trashAction(@RequestBody GtdProject project){
-        return projectRepo.save(project);
+
+        return projectRepo.save(projectService.returnProjectWithAllCompleteActions(project));
     }
     @GetMapping(path="/hotseat")
     public Iterable<GtdProject> getActiveProjects(){

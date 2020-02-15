@@ -114,7 +114,6 @@ class Projects extends React.Component {
     };
     handleActionSortChange = (i,ti, e) => {
         e.preventDefault();
-        debugger
         let tracks = [...this.state.tracks];
         if(e.target.value === '1'){
             tracks[ti].trackActions[i].sortOrder -= 1;
