@@ -19,4 +19,5 @@ it means that it is here to serve as a header for a complete or trashed action. 
 - [ ] Do I container the application????
 - [ ] Postgres DB?
 - [ ] I don't handle the case where I delete a track or action in the edit modal. It should trash the track so that actions can still have existed under it
-- [ ] 
+- [ ] When directly completing an item in organizer. Prompt the user with a modal that asks if they want to associate it with a project.
+- [ ] Consider: Do I need to be able to link projects. Or are tracks and actions enough granularity?

@@ -51,17 +51,17 @@ class HotSeat extends React.Component {
         const projectList = this.state.projects.map((project, projectIndex) => {
             return(
                 <div className="project" key={project.projectId}>
-                    <h4>Project: {project.projectName}</h4>
+                    <h2>Project: {project.projectName}</h2>
                     { project.projectTracks.map((track, trackIndex) => {
                         return(
                             <div>
                                 {sortActions(track.trackActions.filter(action => action.status.name == 'On Deck'), 3).map((action, actionIndex) => {
                                     return(
                                         <div className="action" key={action.sortOrder}>
-                                            <h5>Task: {action.actionTitle}</h5>
+                                            <h4>Task: {action.actionTitle}</h4>
                                             {action.sortOrder ===1 && <button  value="O" onClick={this.finishAction.bind(this,actionIndex, trackIndex, projectIndex)}>Complete</button>}
                                             {action.sortOrder ===1 && <button value="X" onClick={this.finishAction.bind(this,actionIndex, trackIndex, projectIndex)}>Trash</button>}
-                                            <h6> Context: {action.context.contextName}</h6>
+                                            <h5> Context: {action.context.contextName}</h5>
                                             <p>Action needed: {action.actionDescription}</p>
                                         </div>
                                     )

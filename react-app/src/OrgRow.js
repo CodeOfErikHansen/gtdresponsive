@@ -256,7 +256,7 @@ class OrgRow extends React.Component {
             return (
                 <>
                     <label>
-                        Name:
+                        Track:
                         <input type="text" name="trackName" value={track.trackName} onChange={this.handleTrackNameChange.bind(this, trackIndex)}/>
                     </label>
                     <button onClick={this.trackRemove.bind(this, trackIndex)}>Remove Track</button>
@@ -272,43 +272,56 @@ class OrgRow extends React.Component {
                                                                                    length={track.trackActions.length}
 
                 />
-                    )};}
+                    )}
                 </>
             )
         });
         return(
             <div>
                 <Modal show={this.state.show} handleClose={this.hideModal}>
+                    {this.state.modalType === 'project' ?
                     <form onSubmit={this.createContext}>
-                        <input name="context-creator" type="text" value={this.state.contextName} onChange={this.handleContextChange}/>
-                            <input type="submit" value="Add Context"/>
+                        <label>
+                            <input name="context-creator" type="text" value={this.state.contextName} onChange={this.handleContextChange}/>
+                        </label>
+                        <input type="submit" value="Add Context"/>
                     </form>
-
+                        : <></>}
                         <form onSubmit={this.handleSubmit}>
-                            <input name="name" type="text" value={this.state.name}
-                                   onChange={this.handleChange}/>
-
-                            <textarea name="description" rows="4" value={this.state.description} onChange={this.handleDescriptionChange}/>
-                            {this.state.modalType == 'project' ?
+                            {this.state.modalType === 'project' ?
                                 <div>
-                                <select name="status"  onChange={this.handleStatusSelect}>
-                                    {statusList}
-                                </select>
-                                    <button type="button" onClick={this.addTrack}>Add Track</button>
-                                    <div id="action-holder">
-                                        {trackList}
-                                    </div>
+                                    <label>
+                                        Project Name: <input name="name" type="text" value={this.state.name} onChange={this.handleChange}/>
+                                    </label>
+                                    <select name="status"  onChange={this.handleStatusSelect}>
+                                        {statusList}
+                                    </select>
+                                    <br/>
+                                    <label>
+                                        Project Description: <textarea name="description" rows="4" value={this.state.description} onChange={this.handleDescriptionChange}/>
+                                    </label>
+                                    <br/>
+                                          <button type="button" onClick={this.addTrack}>Add Track</button>
+                                          <div id="action-holder">
+                                              {trackList}
+                                          </div>
                                 </div>
-                                : <></>
+                                :
+                                <>
+                                    <label>
+                                        Record Title: <input name="name" type="text" value={this.state.name} onChange={this.handleChange}/>
+                                    </label>
+                                    <label>
+                                        Record Information: <textarea name="description" rows="4" value={this.state.description} onChange={this.handleDescriptionChange}/>
+                                    </label>
+                                </>
                             }
                             <input type="submit" value="Create"/>
                         </form>
-
-                    }
                 </Modal>
                 <div>{lineItem.note}</div>
                 <button value={lineItem.inboxId} onClick={this.props.organizerClick} className="button" id="two-minute">O</button>
-                <button value={lineItem.inboxId} onClick={this.showProjectModal} className="button" id="project-candidate">T</button>
+                <button value={lineItem.inboxId} onClick={this.showProjectModal} className="button" id="project-candidate">P</button>
                 <button value={lineItem.inboxId} onClick={this.showRecordModal} className="button" id="archive">R</button>
                 <button value={lineItem.inboxId} onClick={this.props.organizerClick} className="button" id="discard">X</button>
             </div>

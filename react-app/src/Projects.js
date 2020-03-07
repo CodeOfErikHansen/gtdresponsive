@@ -260,19 +260,19 @@ class Projects extends React.Component {
         const projectList = this.state.projects.map(project => {
            return(
                <div className="project" key={project.projectId}>
-                <h4>Project: {project.projectName}</h4>
+                <h2>Project: {project.projectName}</h2>
                    <button  value={project.projectId} onClick={this.showModal}>Edit</button>
                    <p>About: {project.projectSummary}</p>
                    { project.projectTracks.map(track => {
                        return(
                            <div>
-                               Track Name {track.trackName}
+                               <h3>Track Name {track.trackName}</h3>
                                {sortActions(track.trackActions).map(action => {
                                    return(
                                        <div className="action" key={action.sortOrder}>
-                                           <h5>Task: {action.actionTitle}</h5>
+                                           <h4>Task: {action.actionTitle}</h4>
 
-                                           <h6> Context: {action.context.contextName}</h6>
+                                           <h5> Context: {action.context.contextName}</h5>
                                            <p>Action needed: {action.actionDescription}</p>
                                        </div>
                                    )

@@ -1,0 +1,32 @@
+In this file I am going to come up with a number of records, one offs, and projects I would want my GTD application to support
+The reason for this is that I need to find out if my general case works for what I want to use it for.
+I do have the option to be creative in how I log it for right now.
+
+Working on a Code Project
+    A track is a feature
+    A action is a story
+Working on a book
+    A track could  be a chapter. A track could be a theme
+    Action could be items I want to include in a chapter or theme
+    How do I capture research for a book.
+Working on a webcomic
+    Same idea as book. But I need pictures for thumbnails
+    Pictures would just be nice to have really
+Studying a topic
+    Tracks and actions are an ok way to target new ideas to study. They do not capture the known information very well.
+Buying things
+    Unless I make a grocery list, this is probably just a series of stuff.
+    List works as a track with actions
+    CAn also use actions if prep work is needed e.g. find out pant size before suit shopping
+RPG prep is much the same as the book related content.
+Work tasks are perfect for task/action reminders. This is because I'm expected to store it somewhere else.
+
+Preparing for a business needs records, tracks and actions.
+
+I think the cool thing to do is have multiple subdomains for my different creative processes. I can host a different application on each of them
+This will let me be more tailored to what I need.
+This works because it is still the same tool for everything I need. I have just spread it over many different places.
+
+General Conclusion: The GTD framework does not satisfy my need for a one shop application to handle everything I want to do.
+I should finish it as a FVI based on my current understanding of the scope. I should TRY to use it for everything. This
+will help me identify the pain points for myself. These painpoints are where I make another littlecase 'a' application.

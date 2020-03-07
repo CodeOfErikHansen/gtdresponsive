@@ -23,11 +23,11 @@ class App extends React.Component {
       return (
           <>
             <div>
-                <h1 id="app-title">Get Shit Done</h1>
+                <h1 id="app-title">Get Stuff Done</h1>
                 <nav>
                     <div id="nav-inbox" onClick={this.handleNavClick}>InBox</div>
-                    <div id="hot-seat" onClick={this.handleNavClick}>HotSeat</div>
                     <div id="nav-org" onClick={this.handleNavClick}>Organizer</div>
+                    <div id="hot-seat" onClick={this.handleNavClick}>HotSeat</div>
                     <div id="projects" onClick={this.handleNavClick}>Projects</div>
                     <div id="records" onClick={this.handleNavClick}>Records</div>
                     <div id="complete" onClick={this.handleNavClick}>Complete</div>
